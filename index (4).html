@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Grazi 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;1,700&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        :root {
+            --rosa-principal: #f72585; 
+            --rosa-glow: rgba(247, 37, 133, 0.7);
+            --fundo-escuro: #09010a;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--fundo-escuro);
+            color: #fff;
+            height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #wow-bg {
+            position: fixed; inset: 0; z-index: 0;
+            background: radial-gradient(circle at center, #1a041c 0%, #030003 100%);
+        }
+        .star {
+            position: absolute; background: #fff; border-radius: 50%;
+            opacity: 0.3; animation: twinkle 3s infinite;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.6; } }
+
+        #present-overlay {
+            position: fixed; inset: 0; background: var(--fundo-escuro); z-index: 2000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 1s ease-in-out;
+        }
+        .gift-container { position: relative; width: 170px; height: 170px; margin-bottom: 30px; cursor: pointer; }
+        .gift-box {
+            width: 100%; height: 100%; background: var(--rosa-principal); border-radius: 15px;
+            box-shadow: 0 0 40px var(--rosa-glow); position: relative;
+        }
+        .gift-box::before { content: ''; position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 25px; height: 100%; background: #c21f6a; }
+        .gift-box::after { content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100%; height: 25px; background: #c21f6a; }
+        .wiggle { animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+
+        #progress-bar { width: 220px; height: 7px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        #progress-fill { height: 100%; width: 0%; background: var(--rosa-principal); transition: 0.3s; }
+
+        .glass-card {
+            background: rgba(15, 1, 16, 0.85); backdrop-filter: blur(25px);
+            border: 1px solid var(--rosa-glow); border-radius: 40px;
+            padding: 40px; width: 90%; max-width: 880px;
+            display: none; grid-template-columns: 1fr 1fr; gap: 35px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+            animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .card-active { display: grid; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-family: 'Dancing Script', cursive; color: var(--rosa-principal); font-size: 56px; margin-bottom: 15px; text-shadow: 0 0 10px var(--rosa-glow); }
+        .text-body { font-size: 20px; line-height: 1.7; color: #f0f0f0; font-family: 'Playfair Display', serif; min-height: 120px; }
+
+        .media-slot { border-radius: 25px; overflow: hidden; height: 420px; border: 2px solid var(--rosa-glow); box-shadow: 0 0 30px var(--rosa-glow); }
+        .media-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+        .navigation-dock { position: fixed; bottom: 35px; display: flex; gap: 15px; z-index: 100; }
+        .btn { padding: 14px 40px; border-radius: 50px; border: none; font-family: 'Outfit'; font-weight: 700; transition: 0.3s; font-size: 15px; cursor: pointer;}
+        .btn-next { background: var(--rosa-principal); color: white; box-shadow: 0 8px 20px var(--rosa-glow); }
+        .btn-back { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+        .flying-love {
+            position: fixed; bottom: -60px; pointer-events: none; z-index: 3000;
+            font-family: 'Dancing Script', cursive; font-size: 40px; color: var(--rosa-principal);
+            animation: flyUp 3s linear forwards;
+        }
+        @keyframes flyUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-115vh) translateX(var(--side-move)) rotate(30deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://files.catbox.moe/qzyweo.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="wow-bg"></div>
+
+    <div id="present-overlay">
+        <h1 style="font-family: 'Dancing Script'; color: var(--rosa-principal); font-size: 38px; margin-bottom: 25px;">Para a Grazi...</h1>
+        <div class="gift-container" onclick="abrir()">
+            <div class="gift-box" id="box"></div>
+        </div>
+        <div id="progress-bar"><div id="progress-fill"></div></div>
+        <p style="margin-top: 15px; font-size: 14px; opacity: 0.6;">Clique no presente para abrir!</p>
+    </div>
+
+    <div class="main-container">
+        <div id="t1" class="glass-card"><div class="media-slot"><img src="https://i.pinimg.com/originals/f0/ae/8b/f0ae8bc86ab9b5459880ea9e8894774d.gif"></div><div><h2>Olá, Grazi 🌸</h2><div id="txt1" class="text-body"></div></div></div>
+        <div id="t2" class="glass-card"><div class="media-slot"><img src="https://i.pinimg.com/originals/5f/9d/40/5f9d4041c5b505d18842b2b47e9c8775.gif"></div><div><h2>23 de Agosto ✨</h2><div id="txt2" class="text-body"></div></div></div>
+        <div id="t3" class="glass-card"><div class="media-slot"><img src="https://i.pinimg.com/originals/16/2c/a1/162ca1d463e0d4c848fee9bd01d3042e.gif"></div><div><h2>Nossa vibe... 🎶</h2><div id="txt3" class="text-body"></div><div style="margin-top: 20px; padding: 20px; background: rgba(247, 37, 133, 0.1); border-radius: 20px; border-left: 4px solid var(--rosa-principal);"><p style="color: var(--rosa-principal); font-weight: bold; font-size: 18px; margin-bottom: 5px;">🏎️ Camaro Amarelo</p><p style="font-style: italic; font-size: 16px; color: #ccc;">"Agora eu fiquei doce, igual caramelo..."</p></div></div></div>
+        <div id="t4" class="glass-card"><div class="media-slot"><img src="https://media.tenor.com/pOGPqDU93s0AAAAM/cat-phone-cat.gif"></div><div><h2>Calls e Jogos... 🎧</h2><div id="txt4" class="text-body"></div></div></div>
+        <div id="t5" class="glass-card"><div class="media-slot"><img src="https://i.pinimg.com/originals/73/0d/75/730d75ed729397068c7a89fa7476e305.gif"></div><div><h2>Você é Especial ❤️</h2><div id="txt5" class="text-body"></div></div></div>
+        <div id="t6" class="glass-card"><div class="media-slot"><img src="https://i.pinimg.com/originals/e1/43/92/e14392b3bb9f745025a5cf6a9abe11be.gif"></div><div><h2>Parabéns! 🎂</h2><div id="txt6" class="text-body"></div></div></div>
+
+        <div id="navigation-dock" class="navigation-dock"></div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        let cliques = 0;
+        let typing;
+
+        const msgs = {
+            1: "Eu preparei este cantinho especial para te mostrar o quanto você é importante. Cada detalhe aqui foi pensado para colocar um sorriso no seu rosto hoje.",
+            2: "Nesta data, o mundo ganhou uma pessoa admirável. Fico muito feliz em comemorar esse dia ao seu lado e ver você brilhar em cada momento.",
+            3: "Essa música me lembra da nossa diversão. Você tem o dom maravilhoso de deixar tudo muito mais doce e leve por onde passa.",
+            4: "Adoro os momentos que passamos em call e jogando juntos. São horas que voam e que sempre deixam o meu dia mais feliz e divertido.",
+            5: "Sua inteligência, seu senso de humor e o seu jeito único de ser me encantam todos os dias. Você é uma mulher fantástica e merece o melhor do mundo.",
+            6: "Desejo que seu novo ano seja brilhante e cheio de sonhos realizados. Estarei sempre aqui torcendo por você. Feliz aniversário! ❤️"
+        };
+
+        function abrir() {
+            // Tenta dar play no primeiro clique para "ganhar" permissão do navegador
+            if (cliques === 0) {
+                audio.play().then(() => {
+                    audio.pause();
+                }).catch(e => console.log("Aguardando mais cliques..."));
+            }
+
+            if(cliques >= 5) return;
+            cliques++;
+            document.getElementById('progress-fill').style.width = (cliques * 20) + "%";
+            document.getElementById('box').classList.add('wiggle');
+            
+            if(cliques === 5) {
+                audio.currentTime = 0;
+                audio.volume = 0.5;
+                audio.play(); 
+                
+                setTimeout(() => {
+                    document.getElementById('present-overlay').style.opacity = "0";
+                    setTimeout(() => { 
+                        document.getElementById('present-overlay').style.display = "none"; 
+                        nav(1); 
+                    }, 1000);
+                }, 500);
+            }
+        }
+
+        function nav(n) {
+            clearInterval(typing);
+            document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('card-active'));
+            document.getElementById('t' + n).classList.add('card-active');
+            const dock = document.getElementById('navigation-dock');
+            dock.innerHTML = '';
+            if(n > 1) {
+                const b = document.createElement('button'); b.className = 'btn btn-back';
+                b.innerText = 'Voltar'; b.onclick = () => nav(n-1); dock.appendChild(b);
+            }
+            const nxt = document.createElement('button'); nxt.className = 'btn btn-next';
+            nxt.innerText = n === 6 ? 'Te amo! ❤️' : 'Continuar';
+            nxt.onclick = n === 6 ? voarTeAmo : () => nav(n+1);
+            dock.appendChild(nxt);
+
+            let i = 0;
+            const el = document.getElementById('txt' + n);
+            el.innerHTML = "";
+            typing = setInterval(() => {
+                if(i < msgs[n].length) { el.innerHTML += msgs[n].charAt(i); i++; } 
+                else clearInterval(typing);
+            }, 20);
+        }
+
+        function voarTeAmo() {
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'flying-love';
+                    div.innerText = 'Te amo! ❤️';
+                    div.style.left = Math.random() * 80 + 10 + 'vw';
+                    div.style.setProperty('--side-move', (Math.random() * 300 - 150) + 'px');
+                    document.body.appendChild(div);
+                    setTimeout(() => div.remove(), 3000);
+                }, i * 150);
+            }
+        }
+
+        for(let i=0; i<60; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.width = s.style.height = Math.random() * 2 + 'px';
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.top = Math.random() * 100 + 'vh';
+            document.getElementById('wow-bg').appendChild(s);
+        }
+    </script>
+</body>
+</html>
